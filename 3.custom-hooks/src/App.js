@@ -1,35 +1,47 @@
 import { useState } from 'react';
-import useMathSum from './useMathSum';
 import './App.css';
 
+function useCounter(initialValue = 0, step = 1) {
+  const [count, setCount] = useState(initialValue);
+
+  const increment = () => {
+    setCount(count + step);
+  };
+
+  const decrement = () => {
+    setCount(count - step);
+  };
+
+  const reset = () => {
+    setCount(initialValue);
+  };
+
+  const duplicate = () => {
+    setCount(count * 2);
+  };
+
+  return {
+    count,
+    increment,
+    decrement,
+    reset,
+    duplicate,
+  };
+}
+
 function App() {
-  const [valueA, setValueA] = useState(0);
-  const [valueB, setValueB] = useState(0);
-  const { esPar, sum } = useMathSum(valueA, valueB);
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const form = event.target;
-    const formData = new FormData(form);
-    const a = formData.get('a');
-    const b = formData.get('b');
-
-    setValueA(Number(a));
-    setValueB(Number(b));
-  }
+  const { count, increment, decrement, reset, duplicate } = useCounter(20, 5);
 
   return (
     <div className='App'>
-      <form onSubmit={handleSubmit}>
-        <input type='number' name='a' id='a' placeholder='A' />
-        <input type='number' name='b' id='b' placeholder='B' />
-        <button type='submit'>Sumar</button>
-      </form>
-      <div>
-        <p>La suma es: {sum}</p>
-        <p>Es par: {esPar ? 'Si' : 'No'}</p>
-      </div>
+      <h1>Estado en React</h1>
+      <p>
+        Contador: <b>{count}</b>
+      </p>
+      <button onClick={increment}>Aumentar</button>
+      <button onClick={reset}>Restablecer</button>
+      <button onClick={duplicate}>Duplicar</button>
+      <button onClick={decrement}>Disminuir</button>
     </div>
   );
 }
